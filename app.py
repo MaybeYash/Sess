@@ -29,7 +29,7 @@ async def aexec(code,app, msg,p):
 
 
 
-
+"""
 from pyrogram.types import Message
 import asyncio
 
@@ -48,7 +48,47 @@ async def evaluate_code(app, message: Message):
 @app.on_message(filters.command("s1", prefixes="!"))
 async def start(app, message: Message):
     await message.edit_text("Send !e1  to evaluate Python code.")
+"""
 
+import io
+import sys
+import asyncio
+
+@app.on_message(filters.command("e2", prefixes="!"))
+async def eva_code(app, message):
+    code = message.text.split(maxsplit=1)[1]
+    try:
+        stdout_capture = io.StringIO()
+        sys.stdout = stdout_capture
+
+        stderr_capture = io.StringIO()
+        sys.stderr = stderr_capture
+
+        exec(
+            f"async def __exec_code():\n{code}\n\nresult = await __exec_code()",
+            globals(),
+            locals(),
+        )
+
+        await locals()["result"]
+        
+        stdout_value = stdout_capture.getvalue()
+        stderr_value = stderr_capture.getvalue()
+        if stdout_value:
+            await message.edit_text(stdout_value)
+        elif stderr_value:
+            await message.edit_text(stderr_value)
+        else:
+            await message.edit_text("No output.")
+    except Exception as e:
+        tb_str = traceback.format_exception(
+            type(e), e, e.__traceback__
+        )
+        tb_formatted = "".join(tb_str)
+        await message.edit_text(f"Error: {e}\n\nTraceback:\n{tb_formatted}")
+    finally:
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
 
 
 
