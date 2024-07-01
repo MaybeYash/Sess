@@ -21,7 +21,7 @@
     </style>
 </head>
 <body>
-    <a id="upi-link" href="upi://pay?pa=arunkumar@upi&pn=arun%20kumar%20&am=1&cu=INR&tn=Sample%20test%20api&mode=00" class="upi-button">Pay via UPI</a>
+    <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
 
     <script>
         // Function to parse URL parameters
@@ -43,7 +43,7 @@
             const params = getQueryParams();
             const amount = params.send ? parseFloat(params.send) : 1; // Default to 1 if no amount specified
             const upiLink = document.getElementById('upi-link');
-            const upiHref = `upi://pay?pa=arunkumar@upi&pn=arun%20kumar%20&am=${amount}&cu=INR&tn=Sample%20test%20api&mode=00`;
+            const upiHref = `upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=${amount}&cu=INR&tn=Pay%20Me&mode=00`;
             upiLink.href = upiHref;
         }
 
