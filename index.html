@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPI Payment Button</title>
+    <title>UPI Payment Button and QR Code</title>
     <style>
         .upi-button {
             background-color: #4CAF50; /* Green background */
@@ -18,9 +18,15 @@
             cursor: pointer; /* Pointer/hand icon */
             border-radius: 8px; /* Rounded corners */
         }
+        .qr-code {
+            margin-top: 20px; /* Some space above the QR code */
+        }
     </style>
 </head>
 <body>
-    <a href="upi://pay?pa=arunkumar@upi&pn=arun%20kumar%20&am=1&cu=INR&tn=Sample%20test%20api&mode=00" class="upi-button">Pay via UPI</a>
+    <a href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me%20Here&mode=00" class="upi-button">Pay Via UPI</a>
+    <div class="qr-code">
+        <img src="https://telegra.ph/file/5b162e0fb3b39e57503cf.jpg" alt="UPI QR Code">
+    </div>
 </body>
 </html>
