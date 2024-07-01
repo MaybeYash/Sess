@@ -48,7 +48,6 @@ async def evaluate_code(app, message: Message):
 @app.on_message(filters.command("s1", prefixes="!"))
 async def start(app, message: Message):
     await message.edit_text("Send !e1  to evaluate Python code.")
-"""
 
 import io
 import sys
@@ -89,7 +88,79 @@ async def eva_code(app, message):
     finally:
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
+"""
 
+import subprocess
+import code
+import sys
+from pyrogram.types import ForceReply
+
+def run_code(code_str):
+    try:
+        exec(code_str)
+    except Exception as e:
+        print("Error:", e)
+
+async def run_shell_command(command):
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        print(result.stdout)
+        if result.stderr:
+            print("Error:", result.stderr)
+    except Exception as e:
+        print("Error:", e)
+
+class CustomInterpreter(code.InteractiveConsole):
+    def runsource(self, source, filename="<input>", symbol="single"):
+        source = source.strip()
+        if source:
+            run_code(source)
+
+async def start_terminal():
+    interpreter = CustomInterpreter()
+    interpreter.interact()
+
+@app.on_message(filters.command("start"))
+def start_command(client, message):
+    message.reply_text(
+        "Welcome to the Python Code Runner + Shell + Terminal. "
+        "Type /run_code to run Python code, /run_shell to execute shell command, or /start_terminal to start Python terminal."
+    )
+
+@app.on_message(filters.command("run_code"))
+async def run_code_command(client, message):
+    await message.reply_text(
+        "Enter Python code:",
+        reply_markup=ForceReply()
+    )
+
+@app.on_message(filters.reply & filters.text)
+async def handle_reply(client, message):
+    if message.reply_to_message and isinstance(message.reply_to_message.reply_markup, ForceReply):
+        code_str = message.text
+        run_code(code_str)
+
+@app.on_message(filters.command("run_shell"))
+async def run_shell_commands(app:app, message):
+    await message.reply_text(
+        "Enter shell command:",
+        reply_markup=ForceReply()
+    )
+
+@app.on_message(filters.reply & filters.text)
+async def handle_shell_reply(app:app, message):
+    if message.reply_to_message and isinstance(message.reply_to_message.reply_markup, ForceReply):
+        command = message.text
+        await run_shell_command(command)
+
+@app.on_message(filters.command("start_terminal"))
+async def start_terminal_command(app:app, message):
+    await start_terminal()
+
+@app.on_message(filters.command("exit"))
+async def exit_command(app:app, message):
+    await message.reply_text("Exiting...")
+    app.stop()
 
 
 @app.on_message(filters.command("ev") & filters.user([6505111743, 6517565595, 5220416927, 5896960462]))
