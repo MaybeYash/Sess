@@ -5,31 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPI Payment Button</title>
     <style>
+        /* Your CSS styles for elements */
         .upi-button {
-            background-color: #4CAF50; /* Green background */
-            border: none; /* Remove borders */
-            color: white; /* White text */
-            padding: 15px 32px; /* Some padding */
-            text-align: center; /* Centered text */
-            text-decoration: none; /* Remove underline */
-            display: inline-block; /* Make the button inline-block */
-            font-size: 16px; /* Increase font size */
-            margin: 4px 2px; /* Some margin */
-            cursor: pointer; /* Pointer/hand icon */
-            border-radius: 8px; /* Rounded corners */
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
         }
         .error {
             color: red;
             font-weight: bold;
         }
         #qrcode {
-            display: none; /* Initially hide QR code */
+            display: none;
         }
         .honeycomb {
-            display: none; /* Initially hide loader */
+            display: none;
         }
         #download-button {
-            display: none; /* Initially hide download button */
+            display: none;
         }
         .toast {
             position: fixed;
@@ -42,24 +43,30 @@
             z-index: 9999;
         }
         .success {
-            background-color: #4CAF50; /* Green background for success */
+            background-color: #4CAF50;
         }
         .fail {
-            background-color: #f44336; /* Red background for fail */
+            background-color: #f44336;
+        }
+        /* Additional style for default image */
+        #default-img {
+            background-color: #f0f0f0; /* Light gray background */
+            padding: 20px; /* Adjust padding as needed */
+            text-align: center;
         }
     </style>
+    <script src="script.js" defer></script> <!-- Include your JavaScript file -->
 </head>
 <body>
     <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
-    <p id="error-message" class="error"></p> <!-- Placeholder for error message -->
-    <div id="default-img"> <!-- Placeholder for default image or content -->
-        <img src="default-image.png" alt="Default Image">
+    <p id="error-message" class="error"></p>
+    <div id="default-img">
+        <!-- Placeholder text instead of image -->
+        <p>No image available</p>
     </div>
-    <div class="honeycomb"></div> <!-- Placeholder for loader animation -->
-    <div id="qrcode"></div> <!-- Placeholder for QR code -->
-    <button id="download-button">Download QR Code</button> <!-- Download button -->
-    <div id="toasts"></div> <!-- Placeholder for toast notifications -->
-
-    <script src="script.js" defer></script> <!-- Include your JavaScript file -->
+    <div class="honeycomb"></div>
+    <div id="qrcode"></div>
+    <button id="download-button">Download QR Code</button>
+    <div id="toasts"></div>
 </body>
 </html>
