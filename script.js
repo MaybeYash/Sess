@@ -1,24 +1,10 @@
-// Function to parse URL parameters
-function getQueryParams() {
-    const params = {};
-    const queryString = window.location.href.split('?')[1];
-    if (queryString) {
-        const pairs = queryString.split('&');
-        for (let pair of pairs) {
-            const [key, value] = pair.split('=');
-            params[key.toLowerCase()] = decodeURIComponent(value);
-        }
-    }
-    return params;
-}
-
 // Function to update UPI link with new amount
 function updateUPILink() {
     const params = getQueryParams();
     let amount = 1; // Default amount
     const errorMessage = document.getElementById('error-message');
 
-    if (params.send) {
+    if (params.send !== undefined) {
         if (params.send.toLowerCase() === 'none') {
             amount = 0;
         } else {
@@ -37,13 +23,14 @@ function updateUPILink() {
     upiLink.href = upiHref;
 
     // Clear any previous error messages if amount is valid
-    if (amount > 0 || params.send.toLowerCase() === 'none') {
+    if (amount > 0 || (params.send !== undefined && params.send.toLowerCase() === 'none')) {
         errorMessage.textContent = '';
     }
 
     // Generate QR code based on updated UPI link
     generateQRCode(upiHref, amount);
 }
+
 
 // Function to generate QR code
 function generateQRCode(upiURL, amount) {
