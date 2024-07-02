@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment Button</title>
+    <style>
+        .upi-button {
+            background-color: #4CAF50; /* Green background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            padding: 15px 32px; /* Some padding */
+            text-align: center; /* Centered text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make the button inline-block */
+            font-size: 16px; /* Increase font size */
+            margin: 4px 2px; /* Some margin */
+            cursor: pointer; /* Pointer/hand icon */
+            border-radius: 8px; /* Rounded corners */
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        #qrcode {
+            display: none; /* Initially hide QR code */
+        }
+        .honeycomb {
+            display: none; /* Initially hide loader */
+        }
+        #download-button {
+            display: none; /* Initially hide download button */
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 9999;
+        }
+        .success {
+            background-color: #4CAF50; /* Green background for success */
+        }
+        .fail {
+            background-color: #f44336; /* Red background for fail */
+        }
+    </style>
+</head>
+<body>
+    <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
+    <p id="error-message" class="error"></p> <!-- Placeholder for error message -->
+    <div id="default-img"> <!-- Placeholder for default image or content -->
+        <img src="default-image.png" alt="Default Image">
+    </div>
+    <div class="honeycomb"></div> <!-- Placeholder for loader animation -->
+    <div id="qrcode"></div> <!-- Placeholder for QR code -->
+    <button id="download-button">Download QR Code</button> <!-- Download button -->
+    <div id="toasts"></div> <!-- Placeholder for toast notifications -->
+
+    <script src="script.js" defer></script> <!-- Include your JavaScript file -->
+</body>
+</html>
