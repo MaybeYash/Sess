@@ -67,21 +67,6 @@
             font-size: 18px; /* Font size */
             color: #333; /* Text color */
         }
-
-        /* Styling for Binance Pay button */
-        .pay-button {
-            background-color: #f0b90b; /* Binance Yellow */
-            border: none; /* Remove borders */
-            color: white; /* White text */
-            padding: 15px 32px; /* Some padding */
-            text-align: center; /* Centered text */
-            text-decoration: none; /* Remove underline */
-            display: inline-block; /* Make the button inline-block */
-            font-size: 16px; /* Increase font size */
-            margin: 20px 10px; /* Margin around the button */
-            cursor: pointer; /* Pointer/hand icon */
-            border-radius: 8px; /* Rounded corners */
-        }
     </style>
 </head>
 <body>
@@ -93,8 +78,6 @@
         <p id="payment-text" class="payment-text"></p>
         <!-- UPI Payment Button -->
         <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
-        <!-- Binance Pay Button -->
-        <a id="binance-link" href="binancepay://sendmoney?to=examplePayeeId&currency=USDT&amount=10" class="pay-button">Pay with Binance Pay</a>
     </div>
 
     <p id="error-message" class="error"></p> <!-- Placeholder for error message -->
@@ -164,26 +147,25 @@
 
             // Create a new QRCodeStyling instance
             const qrCode = new QRCodeStyling({
-                width: 128,
-                height: 128,
+                width: 300,
+                height: 300,
                 data: link,
+                image: '/mnt/data/308837678-237b9244-5f20-4b9e-abe5-e4af90b21a96%20(1).jpg', // Your background image
                 imageOptions: {
-                    crossOrigin: "anonymous", // To handle images from different origins
+                    crossOrigin: 'anonymous',
+                    margin: 20,
                 },
                 dotsOptions: {
-                    color: "rgba(0, 0, 0, 0)", // Initially transparent to use gradient
-                    gradient: {
-                        type: "linear",
-                        colorStops: [
-                            { offset: 0, color: "#FF0000" }, // Red
-                            { offset: 0.2, color: "#FF7F00" }, // Orange
-                            { offset: 0.4, color: "#FFFF00" }, // Yellow
-                            { offset: 0.6, color: "#00FF00" }, // Green
-                            { offset: 0.8, color: "#0000FF" }, // Blue
-                            { offset: 1, color: "#8B00FF" }  // Violet
-                        ]
-                    }
-                }
+                    color: '#4CAF50',
+                    type: 'dots',
+                },
+                backgroundOptions: {
+                    color: '#FFFFFF',
+                },
+                imageOptions: {
+                    hideBackgroundDots: true,
+                    imageSize: 0.4,
+                },
             });
 
             // Append the QR code to the container
@@ -192,17 +174,6 @@
 
         // Update the UPI link, QR code, and payment text on page load
         updateUPILink();
-
-        // Function to handle Binance Pay button tap
-        document.getElementById('binance-link').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default link behavior
-            
-            // Perform swipe or transition to Binance page
-            // Replace with your desired transition effect
-            // Example: You can use CSS animations or JavaScript to slide to the new page
-            // For simplicity, let's assume a basic page redirect here
-            window.location.href = event.target.href; // Redirect to Binance page
-        });
     </script>
 </body>
 </html>
