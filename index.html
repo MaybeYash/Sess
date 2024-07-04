@@ -47,6 +47,7 @@
             color: red;
             font-weight: bold;
             text-align: center;
+            margin-top: 20px; /* Space above the error message */
         }
 
         /* Styling for the QR code container */
@@ -113,6 +114,9 @@
                     if (isNaN(parsedAmount) || parsedAmount <= 0) {
                         errorMessage.textContent = 'Invalid amount specified. Please provide a valid positive number.';
                         return;
+                    } else if (parsedAmount > 50000) {
+                        errorMessage.textContent = 'Amount exceeds the maximum limit of ₹50,000. Please provide a valid amount.';
+                        return;
                     } else {
                         amount = parsedAmount;
                     }
@@ -124,7 +128,7 @@
             upiLink.href = upiHref;
 
             // Clear any previous error messages if amount is valid
-            if (amount > 0 || params.send.toLowerCase() === 'none') {
+            if (amount > 0 && amount <= 50000) {
                 errorMessage.textContent = '';
             }
 
@@ -133,7 +137,7 @@
 
             // Update payment text
             const paymentText = document.getElementById('payment-text');
-            paymentText.textContent = `You Are Paying ₹${amount} To Soumo!`;
+            paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
         // Function to generate a rainbow gradient QR code
