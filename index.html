@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPI Payment Button</title>
+    <title>UPI Payment Button with QR Code</title>
     <style>
+        .upi-container {
+            border: 2px solid #4CAF50; /* Green border */
+            padding: 20px; /* Padding around the content */
+            border-radius: 10px; /* Rounded corners */
+            width: max-content; /* Adjust to the content size */
+            margin: 20px auto; /* Center the container */
+            text-align: center; /* Center the content inside */
+            background-color: #f9f9f9; /* Light background color */
+        }
+
         .upi-button {
             background-color: #4CAF50; /* Green background */
             border: none; /* Remove borders */
@@ -14,25 +24,32 @@
             text-decoration: none; /* Remove underline */
             display: inline-block; /* Make the button inline-block */
             font-size: 16px; /* Increase font size */
-            margin: 4px 2px; /* Some margin */
+            margin: 20px 0 0 0; /* Margin to position below QR code */
             cursor: pointer; /* Pointer/hand icon */
             border-radius: 8px; /* Rounded corners */
         }
+
         .error {
             color: red;
             font-weight: bold;
+            text-align: center;
         }
+
         #qr-code {
-            margin-top: 20px;
+            margin: 20px auto; /* Center QR code horizontally */
         }
     </style>
 </head>
 <body>
-    <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
-    <p id="error-message" class="error"></p> <!-- Placeholder for error message -->
+    <!-- Container for QR code and button -->
+    <div class="upi-container">
+        <!-- Placeholder for QR code -->
+        <div id="qr-code"></div>
+        <!-- UPI Payment Button -->
+        <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
+    </div>
 
-    <!-- Placeholder for QR code -->
-    <div id="qr-code"></div>
+    <p id="error-message" class="error"></p> <!-- Placeholder for error message -->
 
     <!-- Include qrcode.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
