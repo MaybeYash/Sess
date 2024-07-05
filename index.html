@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment Page</title>
+    <style>
+        /* Add a colorful background with a starry effect */
+        body {
+            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d); /* Gradient background */
+            background-size: cover;
+            background-attachment: fixed;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white; /* Default text color to white */
+            overflow: hidden;
+        }
+
+        /* Adding starry background effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat; /* Starry background image */
+            opacity: 0.3; /* Slight transparency for subtle effect */
+        }
+
+        /* Make sure the container is above the background */
+        .upi-container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            border-radius: 10px;
+            width: max-content;
+            margin: 20px auto;
+            text-align: center;
+            background-color: black; /* Black background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white; /* White text color */
+        }
+
+        /* Styling for the UPI button */
+        .upi-button {
+            background-color: white; /* White background */
+            border: 2px solid black; /* Black border */
+            color: black; /* Black text */
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none; /* Remove underline */
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0 0 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+        }
+
+        /* Button hover effect */
+        .upi-button:hover {
+            background-color: #f0f0f0; /* Slightly darker shade of white on hover */
+            transform: scale(1.05);
+        }
+
+        /* Styling for error message */
+        .error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Styling for the QR code container */
+        #qr-code-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: black;
+            border: 10px solid black;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Inner QR code box styling */
+        #qr-code-inner {
+            background-color: white; /* White background for QR code */
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* Styling for the payment text */
+        .payment-text {
+            font-family: 'Arial', sans-serif;
+            font-variant: small-caps;
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Styling for the header */
+        .header {
+            font-family: 'Arial', sans-serif;
+            font-variant: small-caps;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            color: black; /* Black text color for the header */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with "Pay" text -->
+    <h1 class="header">Pay</h1>
+
+    <!-- Container for QR code, text, and button -->
+    <div class="upi-container">
+        <!-- Bordered container for QR code -->
+        <div id="qr-code-container">
+            <!-- Inner container for white background QR code -->
+            <div id="qr-code-inner">
+                <!-- Placeholder for QR code -->
+                <div id="qr-code"></div>
+            </div>
+        </div>
+        <!-- Payment Text -->
+        <p id="payment-text" class="payment-text"></p>
+        <!-- UPI Payment Button -->
+        <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
+    </div>
+
+    <p id="error-message" class="error"></p> <!-- Placeholder for error message -->
+
+    <!-- Include qr-code-styling library -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
+
+    <script>
+        // Function to parse URL parameters
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.href.split('?')[1];
+            if (queryString) {
+                const pairs = queryString.split('&');
+                for (let pair of pairs) {
+                    const [key, value] = pair.split('=');
+                    params[key.toLowerCase()] = decodeURIComponent(value);
+                }
+            }
+            return params;
+        }
+
+        // Function to update UPI link, QR code, and payment text with new amount
+        function updateUPILink() {
+            const params = getQueryParams();
+            let amount = 1; // Default amount
+            const errorMessage = document.getElementById('error-message');
+
+            if (params.send) {
+                if (params.send.toLowerCase() === 'none') {
+                    amount = 0;
+                } else {
+                    const parsedAmount = parseFloat(params.send);
+                    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+                        errorMessage.textContent = 'Invalid amount specified. Please provide a valid positive number.';
+                        return;
+                    } else if (parsedAmount > 50000) {
+                        errorMessage.textContent = 'Amount exceeds the maximum limit of ₹50,000. Please provide a valid amount.';
+                        return;
+                    } else {
+                        amount = parsedAmount;
+                    }
+                }
+            }
+
+            const upiLink = document.getElementById('upi-link');
+            const upiHref = `upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=${amount}&cu=INR&tn=Pay%20Me&mode=00`;
+            upiLink.href = upiHref;
+
+            // Clear any previous error messages if amount is valid
+            if (amount > 0 && amount <= 50000) {
+                errorMessage.textContent = '';
+            }
+
+            // Update QR code
+            generateQRCode(upiHref);
+
+            // Update payment text
+            const paymentText = document.getElementById('payment-text');
+            paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
+        }
+
+        // Function to generate a slightly smaller QR code inside a bordered container
+        function generateQRCode(link) {
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = ''; // Clear any existing QR code
+
+            // Create a new QRCodeStyling instance with slightly smaller dimensions
+            const qrCode = new QRCodeStyling({
+                width: 200, // Smaller QR code width
+                height: 200, // Smaller QR code height
+                data: link,
+                imageOptions: {
+                    crossOrigin: "anonymous",
+                },
+                dotsOptions: {
+                    color: "#000000", // Normal black QR code dots
+                }
+            });
+
+            // Append the QR code to the container
+            qrCode.append(qrCodeContainer);
+        }
+
+        // Update the UPI link, QR code, and payment text on page load
+        updateUPILink();
+    </script>
+</body>
+</html
