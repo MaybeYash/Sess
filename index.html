@@ -5,45 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPI Payment Page</title>
     <style>
-        /* Add a more cohesive colorful background with a starry effect */
-        body {
-            background: linear-gradient(to bottom, #1a2a6c, #1d2b64); /* Gradient from dark blue to deep blue */
-            background-size: cover;
-            background-attachment: fixed;
-            position: relative;
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white; /* Default text color to white */
-            overflow: hidden;
-        }
-
-        /* Adding starry background effect */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat; /* Starry background image */
-            opacity: 0.5; /* Slight transparency for subtle effect */
-            z-index: 0;
-        }
-
-        /* Ensure the UPI container is above the background */
+        /* Styling for the main container */
         .upi-container {
-            position: relative;
-            z-index: 1;
             padding: 20px;
             border-radius: 10px;
             width: max-content;
             margin: 20px auto;
             text-align: center;
             background-color: black; /* Black background */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adjust shadow for better contrast */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             color: white; /* White text color */
         }
 
@@ -81,8 +51,8 @@
         #qr-code-container {
             margin: 20px auto;
             padding: 20px;
-            background-color: black; /* Outer black border */
-            border: 10px solid black; /* Black border around the QR code */
+            background-color: black;
+            border: 10px solid black;
             border-radius: 10px;
             display: inline-block;
         }
@@ -112,7 +82,15 @@
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
-            color: white; /* White text color for the header */
+            color: black; /* Black text color for the header */
+        }
+
+        /* Styling for the timer */
+        .timer {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: white;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -130,6 +108,8 @@
                 <div id="qr-code"></div>
             </div>
         </div>
+        <!-- Timer text -->
+        <p id="timer" class="timer"></p>
         <!-- Payment Text -->
         <p id="payment-text" class="payment-text"></p>
         <!-- UPI Payment Button -->
@@ -142,6 +122,7 @@
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
 
     <script>
+        // Function to parse URL parameters
         function getQueryParams() {
             const params = {};
             const queryString = window.location.href.split('?')[1];
@@ -215,10 +196,44 @@
 
             // Append the QR code to the container
             qrCode.append(qrCodeContainer);
+
+            // Start the countdown timer
+            startTimer(qrCode);
+        }
+
+        // Function to start a countdown timer and expire QR code after 2 minutes
+        function startTimer(qrCode) {
+            const timerElement = document.getElementById('timer');
+            const upiButton = document.getElementById('upi-link');
+            let timeRemaining = 120; // 2 minutes in seconds
+
+            const interval = setInterval(() => {
+                // Calculate minutes and seconds remaining
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+
+                // Update the timer display
+                timerElement.textContent = `Time remaining: ${minutes} minute(s) and ${seconds} second(s)`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(interval);
+                    timerElement.textContent = "QR Code expired.";
+                    
+                    // Disable the QR code and UPI button
+                    qrCodeContainer.innerHTML = ''; // Remove QR code
+                    qrCodeContainer.style.backgroundColor = 'gray'; // Indicate expiration
+                    upiButton.textContent = "UPI Link Expired";
+                    upiButton.style.backgroundColor = 'gray';
+                    upiButton.style.pointerEvents = 'none'; // Disable the button
+                    upiButton.href = '#'; // Remove link action
+                }
+
+                timeRemaining--;
+            }, 1000); // Update every second
         }
 
         // Update the UPI link, QR code, and payment text on page load
         updateUPILink();
     </script>
 </body>
-</html
+</html>
