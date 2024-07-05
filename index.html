@@ -7,36 +7,36 @@
     <style>
         /* Styling for the main container */
         .upi-container {
-            padding: 20px; /* Padding around the content */
-            border-radius: 10px; /* Rounded corners */
-            width: max-content; /* Adjust to the content size */
-            margin: 20px auto; /* Center the container */
-            text-align: center; /* Center the content inside */
+            padding: 20px;
+            border-radius: 10px;
+            width: max-content;
+            margin: 20px auto;
+            text-align: center;
             background-color: black; /* Black background */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
-            color: white; /* White text color for readability */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white; /* White text color */
         }
 
         /* Styling for the UPI button */
         .upi-button {
             background-color: #4CAF50; /* Green background */
-            border: none; /* Remove borders */
+            border: none;
             color: white; /* White text */
-            padding: 15px 32px; /* Some padding */
-            text-align: center; /* Centered text */
+            padding: 15px 32px;
+            text-align: center;
             text-decoration: none; /* Remove underline */
-            display: inline-block; /* Make the button inline-block */
-            font-size: 16px; /* Increase font size */
-            margin: 20px 0 0 0; /* Margin to position below text */
-            cursor: pointer; /* Pointer/hand icon */
-            border-radius: 8px; /* Rounded corners */
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0 0 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
         }
 
         /* Button hover effect */
         .upi-button:hover {
-            background-color: #45a049; /* Darker green on hover */
-            transform: scale(1.05); /* Slightly enlarge on hover */
+            background-color: #45a049;
+            transform: scale(1.05);
         }
 
         /* Styling for error message */
@@ -44,38 +44,52 @@
             color: red;
             font-weight: bold;
             text-align: center;
-            margin-top: 20px; /* Space above the error message */
+            margin-top: 20px;
         }
 
         /* Styling for the QR code container */
         #qr-code-container {
-            margin: 20px auto; /* Center QR code horizontally */
-            padding: 20px; /* Padding around the QR code */
-            background-color: black; /* Black background for the container */
-            border: 10px solid black; /* Thick black border around the container */
-            border-radius: 10px; /* Rounded corners for the container */
-            display: inline-block; /* Centering the container */
+            margin: 20px auto;
+            padding: 20px;
+            background-color: black;
+            border: 10px solid black;
+            border-radius: 10px;
+            display: inline-block;
         }
 
         /* Inner QR code box styling */
         #qr-code-inner {
-            background-color: white; /* White background for the inner QR code box */
-            padding: 10px; /* Padding around the QR code */
-            border-radius: 10px; /* Rounded corners for the QR code box */
+            background-color: white; /* White background for QR code */
+            padding: 10px;
+            border-radius: 10px;
         }
 
         /* Styling for the payment text */
         .payment-text {
-            font-family: 'Arial', sans-serif; /* Fallback font if small-caps not supported */
-            font-variant: small-caps; /* Small-caps style */
-            margin-top: 20px; /* Space above the text */
-            font-size: 18px; /* Font size */
-            color: white; /* White text */
-            font-weight: bold; /* Bold text */
+            font-family: 'Arial', sans-serif;
+            font-variant: small-caps;
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Styling for the header */
+        .header {
+            font-family: 'Arial', sans-serif;
+            font-variant: small-caps;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            color: black; /* Black text color for the header */
         }
     </style>
 </head>
 <body>
+    <!-- Header with "Pay" text -->
+    <h1 class="header">Pay</h1>
+
     <!-- Container for QR code, text, and button -->
     <div class="upi-container">
         <!-- Bordered container for QR code -->
@@ -152,18 +166,18 @@
             paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
-        // Function to generate a normal QR code inside a bordered container
+        // Function to generate a larger QR code inside a bordered container
         function generateQRCode(link) {
             const qrCodeContainer = document.getElementById('qr-code');
             qrCodeContainer.innerHTML = ''; // Clear any existing QR code
 
-            // Create a new QRCodeStyling instance
+            // Create a new QRCodeStyling instance with larger dimensions
             const qrCode = new QRCodeStyling({
-                width: 128,
-                height: 128,
+                width: 256, // Larger QR code width
+                height: 256, // Larger QR code height
                 data: link,
                 imageOptions: {
-                    crossOrigin: "anonymous", // To handle images from different origins
+                    crossOrigin: "anonymous",
                 },
                 dotsOptions: {
                     color: "#000000", // Normal black QR code dots
