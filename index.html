@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPI Payment Page</title>
     <style>
-        /* Add a colorful background with a starry effect */
+        /* Add a more cohesive colorful background with a starry effect */
         body {
-            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d); /* Gradient background */
+            background: linear-gradient(to bottom, #1a2a6c, #1d2b64); /* Gradient from dark blue to deep blue */
             background-size: cover;
             background-attachment: fixed;
             position: relative;
@@ -29,10 +29,11 @@
             width: 100%;
             height: 100%;
             background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat; /* Starry background image */
-            opacity: 0.3; /* Slight transparency for subtle effect */
+            opacity: 0.5; /* Slight transparency for subtle effect */
+            z-index: 0;
         }
 
-        /* Make sure the container is above the background */
+        /* Ensure the UPI container is above the background */
         .upi-container {
             position: relative;
             z-index: 1;
@@ -42,7 +43,7 @@
             margin: 20px auto;
             text-align: center;
             background-color: black; /* Black background */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adjust shadow for better contrast */
             color: white; /* White text color */
         }
 
@@ -80,8 +81,8 @@
         #qr-code-container {
             margin: 20px auto;
             padding: 20px;
-            background-color: black;
-            border: 10px solid black;
+            background-color: black; /* Outer black border */
+            border: 10px solid black; /* Black border around the QR code */
             border-radius: 10px;
             display: inline-block;
         }
@@ -111,7 +112,7 @@
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
-            color: black; /* Black text color for the header */
+            color: white; /* White text color for the header */
         }
     </style>
 </head>
@@ -141,7 +142,6 @@
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
 
     <script>
-        // Function to parse URL parameters
         function getQueryParams() {
             const params = {};
             const queryString = window.location.href.split('?')[1];
