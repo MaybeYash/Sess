@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPI Payment Button with Rainbow QR Code</title>
+    <title>UPI Payment Button with Bordered QR Code</title>
     <style>
         /* Styling for the container */
         .upi-container {
@@ -51,12 +51,13 @@
         }
 
         /* Styling for the QR code container */
-        #qr-code {
+        #qr-code-container {
             margin: 20px auto; /* Center QR code horizontally */
-            display: inline-block;
             padding: 10px; /* Padding around the QR code */
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for QR code */
-            border-radius: 10px; /* Rounded corners */
+            background-color: #fff; /* White background for QR code */
+            border: 2px solid black; /* Black border around the QR code */
+            border-radius: 10px; /* Rounded corners for the QR code container */
+            display: inline-block; /* Centering the QR code */
         }
 
         /* Styling for the payment text */
@@ -72,8 +73,11 @@
 <body>
     <!-- Container for QR code, text, and button -->
     <div class="upi-container">
-        <!-- Placeholder for QR code -->
-        <div id="qr-code"></div>
+        <!-- Bordered container for QR code -->
+        <div id="qr-code-container">
+            <!-- Placeholder for QR code -->
+            <div id="qr-code"></div>
+        </div>
         <!-- Payment Text -->
         <p id="payment-text" class="payment-text"></p>
         <!-- UPI Payment Button -->
@@ -140,32 +144,22 @@
             paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
-        // Function to generate a rainbow gradient QR code
+        // Function to generate a normal QR code inside a bordered container
         function generateQRCode(link) {
             const qrCodeContainer = document.getElementById('qr-code');
             qrCodeContainer.innerHTML = ''; // Clear any existing QR code
 
             // Create a new QRCodeStyling instance
             const qrCode = new QRCodeStyling({
-                width: 300,
-                height: 300,
+                width: 128,
+                height: 128,
                 data: link,
-                image: '/mnt/data/308837678-237b9244-5f20-4b9e-abe5-e4af90b21a96%20(1).jpg', // Your background image
                 imageOptions: {
-                    crossOrigin: 'anonymous',
-                    margin: 20,
+                    crossOrigin: "anonymous", // To handle images from different origins
                 },
                 dotsOptions: {
-                    color: '#4CAF50',
-                    type: 'dots',
-                },
-                backgroundOptions: {
-                    color: '#FFFFFF',
-                },
-                imageOptions: {
-                    hideBackgroundDots: true,
-                    imageSize: 0.4,
-                },
+                    color: "#000000", // Normal black QR code dots
+                }
             });
 
             // Append the QR code to the container
