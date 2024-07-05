@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPI Payment Button with Bordered QR Code</title>
+    <title>UPI Payment Page</title>
     <style>
         /* Styling for the main container */
         .upi-container {
@@ -13,7 +13,7 @@
             margin: 20px auto; /* Center the container */
             text-align: center; /* Center the content inside */
             background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-            background-image: url('/mnt/data/308837678-237b9244-5f20-4b9e-abe5-e4af90b21a96%20(1).jpg'); /* Background image */
+            background-image: url('/mnt/data/file-bsbcc0Chd817AePoLkoCMOfP'); /* Background image */
             background-size: cover; /* Cover the entire container */
             background-blend-mode: overlay; /* Blend the image with the background color */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
@@ -59,6 +59,13 @@
             display: inline-block; /* Centering the container */
         }
 
+        /* Inner QR code box styling */
+        #qr-code-inner {
+            background-color: white; /* White background for the inner QR code box */
+            padding: 10px; /* Padding around the QR code */
+            border-radius: 10px; /* Rounded corners for the QR code box */
+        }
+
         /* Styling for the payment text */
         .payment-text {
             font-family: 'Arial', sans-serif; /* Fallback font if small-caps not supported */
@@ -75,8 +82,11 @@
     <div class="upi-container">
         <!-- Bordered container for QR code -->
         <div id="qr-code-container">
-            <!-- Placeholder for QR code -->
-            <div id="qr-code"></div>
+            <!-- Inner container for white background QR code -->
+            <div id="qr-code-inner">
+                <!-- Placeholder for QR code -->
+                <div id="qr-code"></div>
+            </div>
         </div>
         <!-- Payment Text -->
         <p id="payment-text" class="payment-text"></p>
