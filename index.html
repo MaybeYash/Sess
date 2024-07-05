@@ -7,10 +7,27 @@
     <style>
         /* General styling for the body */
         body {
-            background-color: black; /* Set the background color to black */
+            background-color: black; /* Base background color */
             color: white; /* Set the text color to white */
             font-family: 'Arial', sans-serif; /* Consistent font across the page */
-            transition: background-color 0.5s, color 0.5s; /* Smooth transition for day/night mode */
+            overflow: hidden; /* Hide scrollbars to contain the animation */
+        }
+
+        /* Starry background effect */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind other elements */
+            background: black url('https://www.transparenttextures.com/patterns/stardust.png'); /* Star pattern background */
+            animation: moveStars 100s linear infinite; /* Infinite animation */
+        }
+
+        @keyframes moveStars {
+            from { background-position: 0 0; }
+            to { background-position: 10000px 10000px; } /* Move the background over time */
         }
 
         /* Header styling */
@@ -19,8 +36,8 @@
             align-items: center;
             justify-content: center;
             margin: 20px 0; /* Space around the header */
-            position: relative; /* For positioning the day/night toggle */
             font-variant: small-caps; /* Small-caps style for text */
+            z-index: 1; /* Ensure it appears above the stars */
         }
 
         /* Styling for the text in the header */
@@ -49,6 +66,7 @@
             text-align: center; /* Center the content inside */
             background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Light shadow */
+            z-index: 1; /* Ensure it appears above the stars */
         }
 
         /* Styling for the UPI button */
@@ -108,10 +126,14 @@
             margin-top: 40px; /* Space above the footer */
             font-size: 14px; /* Smaller font size */
             color: #fff; /* White text color */
+            z-index: 1; /* Ensure it appears above the stars */
         }
     </style>
 </head>
 <body>
+    <!-- Starry background container -->
+    <div class="stars"></div>
+
     <!-- Header Section -->
     <div class="header">
         <div class="header-line"></div>
@@ -189,7 +211,6 @@
             paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
-        // Function to generate a white QR code
         function generateQRCode(link) {
             const qrCodeContainer = document.getElementById('qr-code');
             qrCodeContainer.innerHTML = ''; // Clear any existing QR code
