@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment Page</title>
+    <style>
+        /* Styling for the main container */
+        .upi-container {
+            padding: 20px;
+            border-radius: 10px;
+            width: max-content;
+            margin: 20px auto;
+            text-align: center;
+            background-color: black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        /* Styling for the UPI button */
+        .upi-button {
+            background-color: white;
+            border: 2px solid black;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0 0 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* Button hover effect */
+        .upi-button:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        /* Styling for error message */
+        .error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Styling for the QR code container */
+        #qr-code-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: black;
+            border: 10px solid black;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Inner QR code box styling */
+        #qr-code-inner {
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* Styling for the payment text */
+        .payment-text {
+            font-family: 'Arial', sans-serif;
+            font-variant: small-caps;
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Styling for the header */
+        .header {
+            font-family: 'Arial', sans-serif;
+            font-variant: small-caps;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            color: black;
+        }
+
+        /* Styling for the timer */
+        .timer {
+            margin-top: 10px;
+            font-size: 16px;
+            color: yellow;
+        }
+
+        /* Background styling with stars */
+        body {
+            background: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="header">Pay</h1>
+
+    <div class="upi-container">
+        <div id="qr-code-container">
+            <div id="qr-code-inner">
+                <div id="qr-code"></div>
+            </div>
+        </div>
+        <p id="payment-text" class="payment-text"></p>
+        <p id="timer" class="timer"></p>
+        <a id="upi-link" href="upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=1&cu=INR&tn=Pay%20Me&mode=00" class="upi-button">Pay via UPI</a>
+    </div>
+
+    <p id="error-message" class="error"></p>
+
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
+
+    <script>
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.href.split('?')[1];
+            if (queryString) {
+                const pairs = queryString.split('&');
+                for (let pair of pairs) {
+                    const [key, value] = pair.split('=');
+                    params[key.toLowerCase()] = decodeURIComponent(value);
+                }
+            }
+            return params;
+        }
+
+        function updateUPILink() {
+            const params = getQueryParams();
+            let amount = 1; // Default amount
+            const errorMessage = document.getElementById('error-message');
+
+            if (params.send) {
+                if (params.send.toLowerCase() === 'none') {
+                    amount = 0;
+                } else {
+                    const parsedAmount = parseFloat(params.send);
+                    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+                        errorMessage.textContent = 'Invalid amount specified. Please provide a valid positive number.';
+                        return;
+                    } else if (parsedAmount > 50000) {
+                        errorMessage.textContent = 'Amount exceeds the maximum limit of ₹50,000. Please provide a valid amount.';
+                        return;
+                    } else {
+                        amount = parsedAmount;
+                    }
+                }
+            }
+
+            const upiLink = document.getElementById('upi-link');
+            const upiHref = `upi://pay?pa=maybesoumo@fam&pn=Soumo%20Das%20&am=${amount}&cu=INR&tn=Pay%20Me&mode=00`;
+            upiLink.href = upiHref;
+
+            if (amount > 0 && amount <= 50000) {
+                errorMessage.textContent = '';
+            }
+
+            generateQRCode(upiHref);
+
+            const paymentText = document.getElementById('payment-text');
+            paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
+        }
+
+        function generateQRCode(link) {
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = '';
+
+            const qrCode = new QRCodeStyling({
+                width: 200,
+                height: 200,
+                data: link,
+                imageOptions: {
+                    crossOrigin: "anonymous",
+                },
+                dotsOptions: {
+                    color: "#000000",
+                }
+            });
+
+            qrCode.append(qrCodeContainer);
+
+            startTimer(qrCode);
+        }
+
+        function startTimer(qrCode) {
+            const timerElement = document.getElementById('timer');
+            const upiButton = document.getElementById('upi-link');
+            let timeRemaining = 120; // 2 minutes in seconds
+
+            const interval = setInterval(() => {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+
+                timerElement.textContent = `Time remaining: ${minutes} minute(s) and ${seconds} second(s)`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(interval);
+                    timerElement.textContent = "QR Code expired.";
+                    
+                    const qrCodeContainer = document.getElementById('qr-code');
+                    qrCodeContainer.innerHTML = '';
+                    qrCodeContainer.style.backgroundColor = 'gray';
+
+                    upiButton.textContent = "UPI Link Expired";
+                    upiButton.style.backgroundColor = 'gray';
+                    upiButton.style.pointerEvents = 'none';
+                    upiButton.style.cursor = 'not-allowed';
+                    upiButton.href = '#';
+
+                    generateInvalidQRCode();
+                }
+
+                timeRemaining--;
+            }, 1000);
+        }
+
+        function generateInvalidQRCode() {
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = '';
+
+            const qrCode = new QRCodeStyling({
+                width: 200,
+                height: 200,
+                data: "Invalid",
+                dotsOptions: {
+                    color: "#FF0000",
+                }
+            });
+
+            qrCode.append(qrCodeContainer);
+        }
+
+        updateUPILink();
+    </script>
+</body>
+</html>
