@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPI Payment Button with Rainbow QR Code</title>
+    <title>UPI Payment Button with Effects</title>
     <style>
         /* General styling for the body */
         body {
@@ -11,6 +11,7 @@
             color: white; /* Set the text color to white */
             font-family: 'Arial', sans-serif; /* Consistent font across the page */
             overflow: hidden; /* Hide scrollbars to contain the animation */
+            position: relative; /* For positioning snowflakes */
         }
 
         /* Starry background effect */
@@ -128,6 +129,34 @@
             color: #fff; /* White text color */
             z-index: 1; /* Ensure it appears above the stars */
         }
+
+        /* Snowflake styling */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            opacity: 0.9;
+            user-select: none; /* Prevent text selection */
+            z-index: 2; /* Ensure it appears above other content */
+        }
+
+        /* Snowflake animation */
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* Generate multiple snowflakes */
+        .snowflake:nth-child(odd) {
+            animation: fall 10s linear infinite;
+            animation-delay: 0s, 5s;
+        }
+
+        .snowflake:nth-child(even) {
+            animation: fall 15s linear infinite;
+            animation-delay: 2s, 7s;
+        }
     </style>
 </head>
 <body>
@@ -156,8 +185,31 @@
     <!-- Include qr-code-styling library -->
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
 
+    <!-- Snowflakes script -->
     <script>
-        // Function to parse URL parameters
+        // Snowflake characters for variety
+        const snowflakeChars = ['❄️', '❅', '❆'];
+
+        // Function to create snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+            snowflake.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+            snowflake.style.fontSize = Math.random() * 1.5 + 0.5 + 'em'; // Random size
+            snowflake.style.animationDuration = Math.random() * 5 + 5 + 's'; // Random fall speed
+
+            document.body.appendChild(snowflake);
+
+            // Remove the snowflake after it falls
+            setTimeout(() => {
+                snowflake.remove();
+            }, 10000); // Match the animation duration
+        }
+
+        // Generate snowflakes at intervals
+        setInterval(createSnowflake, 300); // Create a new snowflake every 300ms
+
         function getQueryParams() {
             const params = {};
             const queryString = window.location.href.split('?')[1];
