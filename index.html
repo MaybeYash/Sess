@@ -166,15 +166,15 @@
             paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
-        // Function to generate a larger QR code inside a bordered container
+        // Function to generate a slightly smaller QR code inside a bordered container
         function generateQRCode(link) {
             const qrCodeContainer = document.getElementById('qr-code');
             qrCodeContainer.innerHTML = ''; // Clear any existing QR code
 
-            // Create a new QRCodeStyling instance with larger dimensions
+            // Create a new QRCodeStyling instance with slightly smaller dimensions
             const qrCode = new QRCodeStyling({
-                width: 256, // Larger QR code width
-                height: 256, // Larger QR code height
+                width: 200, // Smaller QR code width
+                height: 200, // Smaller QR code height
                 data: link,
                 imageOptions: {
                     crossOrigin: "anonymous",
