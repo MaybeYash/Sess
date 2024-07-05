@@ -7,8 +7,10 @@
     <style>
         /* General styling for the body */
         body {
-            transition: background-color 0.5s, color 0.5s; /* Smooth transition for day/night mode */
+            background-color: black; /* Set the background color to black */
+            color: white; /* Set the text color to white */
             font-family: 'Arial', sans-serif; /* Consistent font across the page */
+            transition: background-color 0.5s, color 0.5s; /* Smooth transition for day/night mode */
         }
 
         /* Header styling */
@@ -25,32 +27,16 @@
         .header-text {
             font-size: 24px;
             margin: 0 10px; /* Space around the text */
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient text effect */
+            -webkit-background-clip: text;
+            color: transparent; /* Text color is transparent to show gradient */
         }
 
         /* Styling for the border line in the header */
         .header-line {
             flex-grow: 1; /* Fill the remaining space */
             height: 2px;
-            background-color: black; /* Black border line */
-        }
-
-        /* Day/Night toggle button styling */
-        .toggle-button {
-            position: absolute;
-            right: 10px; /* Position to the right within the header */
-            padding: 5px 10px; /* Padding inside the button */
-            background-color: #4CAF50; /* Green background */
-            border: none; /* No border */
-            color: white; /* White text */
-            border-radius: 5px; /* Slightly rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
-        }
-
-        /* Day/Night button hover effect */
-        .toggle-button:hover {
-            background-color: #45a049; /* Darker green on hover */
-            transform: scale(1.05); /* Slightly enlarge on hover */
+            background-color: white; /* White border line */
         }
 
         /* Styling for the container */
@@ -61,11 +47,8 @@
             width: max-content; /* Adjust to the content size */
             margin: 20px auto; /* Center the container */
             text-align: center; /* Center the content inside */
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-            background-image: url('/mnt/data/308837678-237b9244-5f20-4b9e-abe5-e4af90b21a96%20(1).jpg'); /* Background image */
-            background-size: cover; /* Cover the entire container */
-            background-blend-mode: overlay; /* Blend the image with the background color */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Light shadow */
         }
 
         /* Styling for the UPI button */
@@ -103,7 +86,7 @@
             margin: 20px auto; /* Center QR code horizontally */
             display: inline-block;
             padding: 10px; /* Padding around the QR code */
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for QR code */
+            background-color: white; /* White background for QR code */
             border-radius: 10px; /* Rounded corners */
         }
 
@@ -113,7 +96,10 @@
             font-variant: small-caps; /* Small-caps style */
             margin-top: 20px; /* Space above the text */
             font-size: 18px; /* Font size */
-            color: #333; /* Text color */
+            color: white; /* Text color */
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient text effect */
+            -webkit-background-clip: text;
+            color: transparent; /* Text color is transparent to show gradient */
         }
 
         /* Styling for the footer */
@@ -121,7 +107,7 @@
             text-align: center; /* Center the footer text */
             margin-top: 40px; /* Space above the footer */
             font-size: 14px; /* Smaller font size */
-            color: #666; /* Light gray text color */
+            color: #fff; /* White text color */
         }
     </style>
 </head>
@@ -131,7 +117,6 @@
         <div class="header-line"></div>
         <div class="header-text">PayMe</div>
         <div class="header-line"></div>
-        <button class="toggle-button" onclick="toggleDayNightMode()">Day/Night</button>
     </div>
 
     <!-- Container for QR code, text, and button -->
@@ -204,6 +189,7 @@
             paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
+        // Function to generate a white QR code
         function generateQRCode(link) {
             const qrCodeContainer = document.getElementById('qr-code');
             qrCodeContainer.innerHTML = ''; // Clear any existing QR code
@@ -213,22 +199,11 @@
                 width: 128,
                 height: 128,
                 data: link,
-                imageOptions: {
-                    crossOrigin: "anonymous", // To handle images from different origins
-                },
                 dotsOptions: {
-                    color: "rgba(0, 0, 0, 0)", // Initially transparent to use gradient
-                    gradient: {
-                        type: "linear",
-                        colorStops: [
-                            { offset: 0, color: "#FF0000" }, // Red
-                            { offset: 0.2, color: "#FF7F00" }, // Orange
-                            { offset: 0.4, color: "#FFFF00" }, // Yellow
-                            { offset: 0.6, color: "#00FF00" }, // Green
-                            { offset: 0.8, color: "#0000FF" }, // Blue
-                            { offset: 1, color: "#8B00FF" }  // Violet
-                        ]
-                    }
+                    color: "black" // Set dots color to black
+                },
+                backgroundOptions: {
+                    color: "white" // Set background color to white
                 }
             });
 
@@ -242,7 +217,7 @@
 
     <!-- Footer Section -->
     <footer>
-        <p>Copyright ©️ Soumo All Rights Reserved.</p>
+        Copyright ©️ Soumo all rights reserved
     </footer>
 </body>
 </html>
