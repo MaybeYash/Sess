@@ -5,6 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPI Payment Button with Rainbow QR Code</title>
     <style>
+        /* General styling for the body */
+        body {
+            transition: background-color 0.5s, color 0.5s; /* Smooth transition for day/night mode */
+            font-family: 'Arial', sans-serif; /* Consistent font across the page */
+        }
+
+        /* Header styling */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0; /* Space around the header */
+            position: relative; /* For positioning the day/night toggle */
+            font-variant: small-caps; /* Small-caps style for text */
+        }
+
+        /* Styling for the text in the header */
+        .header-text {
+            font-size: 24px;
+            margin: 0 10px; /* Space around the text */
+        }
+
+        /* Styling for the border line in the header */
+        .header-line {
+            flex-grow: 1; /* Fill the remaining space */
+            height: 2px;
+            background-color: black; /* Black border line */
+        }
+
+        /* Day/Night toggle button styling */
+        .toggle-button {
+            position: absolute;
+            right: 10px; /* Position to the right within the header */
+            padding: 5px 10px; /* Padding inside the button */
+            background-color: #4CAF50; /* Green background */
+            border: none; /* No border */
+            color: white; /* White text */
+            border-radius: 5px; /* Slightly rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+        }
+
+        /* Day/Night button hover effect */
+        .toggle-button:hover {
+            background-color: #45a049; /* Darker green on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
         /* Styling for the container */
         .upi-container {
             border: 2px solid #4CAF50; /* Green border */
@@ -78,6 +126,14 @@
     </style>
 </head>
 <body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="header-line"></div>
+        <div class="header-text">PayMe</div>
+        <div class="header-line"></div>
+        <button class="toggle-button" onclick="toggleDayNightMode()">Day/Night</button>
+    </div>
+
     <!-- Container for QR code, text, and button -->
     <div class="upi-container">
         <!-- Placeholder for QR code -->
@@ -148,7 +204,6 @@
             paymentText.textContent = `You are paying ₹${amount} to Soumo!`;
         }
 
-        // Function to generate a rainbow gradient QR code
         function generateQRCode(link) {
             const qrCodeContainer = document.getElementById('qr-code');
             qrCodeContainer.innerHTML = ''; // Clear any existing QR code
