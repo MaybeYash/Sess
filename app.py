@@ -30,64 +30,7 @@ async def aexec(code,app, msg,p):
 
 
 """
-from pyrogram.types import Message
-import asyncio
 
-@app.on_message(filters.command("e1", prefixes="!"))
-async def evaluate_code(app, message: Message):
-    code = message.text.split(maxsplit=1)[1]
-    try:
-        exec_locals = {}
-        exec(code, globals(), exec_locals)
-        output = str(exec_locals)
-        await message.edit_text(output)
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        await message.edit_text(f"Error: {e}\n\n{traceback_str}")
-
-@app.on_message(filters.command("s1", prefixes="!"))
-async def start(app, message: Message):
-    await message.edit_text("Send !e1  to evaluate Python code.")
-
-import io
-import sys
-import asyncio
-
-@app.on_message(filters.command("e2", prefixes="!"))
-async def eva_code(app, message):
-    code = message.text.split(maxsplit=1)[1]
-    try:
-        stdout_capture = io.StringIO()
-        sys.stdout = stdout_capture
-
-        stderr_capture = io.StringIO()
-        sys.stderr = stderr_capture
-
-        exec(
-            f"async def __exec_code():\n{code}\n\nresult = await __exec_code()",
-            globals(),
-            locals(),
-        )
-
-        await locals()["result"]
-        
-        stdout_value = stdout_capture.getvalue()
-        stderr_value = stderr_capture.getvalue()
-        if stdout_value:
-            await message.edit_text(stdout_value)
-        elif stderr_value:
-            await message.edit_text(stderr_value)
-        else:
-            await message.edit_text("No output.")
-    except Exception as e:
-        tb_str = traceback.format_exception(
-            type(e), e, e.__traceback__
-        )
-        tb_formatted = "".join(tb_str)
-        await message.edit_text(f"Error: {e}\n\nTraceback:\n{tb_formatted}")
-    finally:
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
 """
 
 import subprocess
@@ -95,72 +38,79 @@ import code
 import sys
 from pyrogram.types import ForceReply
 
-def run_code(code_str):
-    try:
-        exec(code_str)
-    except Exception as e:
-        print("Error:", e)
+from pyrogram import Client, filters
+from pyrogram.types import Message
+import sqlite3
+import random
+import string
 
-async def run_shell_command(command):
-    try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        print(result.stdout)
-        if result.stderr:
-            print("Error:", result.stderr)
-    except Exception as e:
-        print("Error:", e)
+# Generate a unique invite code
+def generate_invite_code():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
-class CustomInterpreter(code.InteractiveConsole):
-    def runsource(self, source, filename="<input>", symbol="single"):
-        source = source.strip()
-        if source:
-            run_code(source)
+# Save the referral in the database
+def save_referral(user_id, invite_code):
+    # Open a new connection in each thread
+    conn = sqlite3.connect('referrals.db', check_same_thread=False)
+    cursor = conn.cursor()
 
-async def start_terminal():
-    interpreter = CustomInterpreter()
-    interpreter.interact()
+    cursor.execute("INSERT OR REPLACE INTO referrals (user_id, invite_code) VALUES (?, ?)", (user_id, invite_code))
+    
+    conn.commit()
+    conn.close()  # Always close the connection after each operation
+
+# Fetch the inviter's user ID from the invite code
+def get_user_id_by_invite_code(invite_code):
+    # Open a new connection in each thread
+    conn = sqlite3.connect('referrals.db', check_same_thread=False)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT user_id FROM referrals WHERE invite_code = ?", (invite_code,))
+    result = cursor.fetchone()
+
+    conn.close()  # Always close the connection after each operation
+    return result[0] if result else None
 
 @app.on_message(filters.command("start"))
-def start_command(client, message):
-    message.reply_text(
-        "Welcome to the Python Code Runner + Shell + Terminal. "
-        "Type /run_code to run Python code, /run_shell to execute shell command, or /start_terminal to start Python terminal."
-    )
+async def start(client: Client, message: Message):
+    user_id = message.from_user.id  # The new user (invited user)
+    user_name = message.from_user.first_name or "Unknown"
 
-@app.on_message(filters.command("run_code"))
-async def run_code_command(client, message):
-    await message.reply_text(
-        "Enter Python code:",
-        reply_markup=ForceReply()
-    )
+    # Check if the user was referred using an invite code
+    if len(message.command) > 1:
+        start_param = message.command[1]
 
-@app.on_message(filters.reply & filters.text)
-async def handle_reply(client, message):
-    if message.reply_to_message and isinstance(message.reply_to_message.reply_markup, ForceReply):
-        code_str = message.text
-        run_code(code_str)
+        # Parse the invite code (e.g., invitedBy_ABC123)
+        if start_param.startswith("invitedBy_"):
+            invite_code = start_param.split('invitedBy_')[-1]
 
-@app.on_message(filters.command("run_shell"))
-async def run_shell_commands(app:app, message):
-    await message.reply_text(
-        "Enter shell command:",
-        reply_markup=ForceReply()
-    )
+            # Get inviter's user ID from the invite code
+            inviter_id = get_user_id_by_invite_code(invite_code)
 
-@app.on_message(filters.reply & filters.text)
-async def handle_shell_reply(app:app, message):
-    if message.reply_to_message and isinstance(message.reply_to_message.reply_markup, ForceReply):
-        command = message.text
-        await run_shell_command(command)
+            if inviter_id:
+                inviter_name = await client.get_users(inviter_id)
+                inviter_name = inviter_name.first_name or "Unknown"
 
-@app.on_message(filters.command("start_terminal"))
-async def start_terminal_command(app:app, message):
-    await start_terminal()
+                # Send welcome message to the user who joined via invite
+                await message.reply(f"Welcome! You were invited by {inviter_name}")
 
-@app.on_message(filters.command("exit"))
-async def exit_command(app:app, message):
-    await message.reply_text("Exiting...")
-    app.stop()
+                # Notify the inviter about the successful referral
+                await client.send_message(
+                    inviter_id, 
+                    f"{user_name} joined via your invite link!"
+                )
+
+                # Optionally save the referral information
+                save_referral(user_id, None)
+            else:
+                await message.reply("Invalid invite code.")
+    else:
+        # If no invite code, generate one for the user
+        invite_code = generate_invite_code()
+        save_referral(user_id, invite_code)
+
+        # Reply with the user's unique invite link
+        await message.reply(f"Welcome! Share your invite link: https://telegram.me/SpaceXCode_Bot?start=invitedBy_{invite_code}")
 
 
 @app.on_message(filters.command("ev") & filters.user([6505111743, 6517565595, 5220416927, 5896960462]))
